@@ -14,7 +14,7 @@ import static inforbis.erp.service.tools.RandomToken.randomToken;
 public class MailService {
 
     final String username = "dvirovec@inforbis.hr";
-    final String password = "2Monkeysonthesky1";
+    final String password = "2Mxxxxxx";
 
     private Session session;
 
