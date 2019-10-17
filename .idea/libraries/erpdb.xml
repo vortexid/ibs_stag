@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="erpdb">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/classes/artifacts/erpdb_jar/erpdb.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

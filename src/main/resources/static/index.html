@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script type="text/javascript" src="/jquery/jquery.js"></script>
+	<script type="text/javascript" src="/helpers.js"></script>
+	<script type="text/javascript" src="/login.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="semantic/semantic.min.css">
+    <script src="semantic/semantic.min.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <meta charset="UTF-8">
+	<title>INFORBIS</title>
+	
+<style>
+
+.ui.dropdown.item {
+	font-size: 16px;
+	color:white;
+}
+
+.ui.menu {
+	font-size: 16px;
+	color:white;
+}
+
+body {
+	background-color: lightgray;
+	margin: 10px;
+	color:white;
+}
+
+#top_menu {
+	margin: 10px;
+	margin-left: 5px;
+	color:blue;	
+}
+
+.orbisCenterDialog {
+	margin-left: -200px!important;
+	max-width: 450px!important;
+}
+
+</style>
+
+</head>
+<body>
+	<div id="appControl" class="ui menu" style="background-color:teal;">
+
+		<a class="item active" style="color:white;font-size: 18px;" onclick="askQuestions();"><i class="bars icon"></i></a>
+
+		<div class="ui item">
+			<label
+				style="color:white;font-size: 22px;font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">ORBIS</label>
+		</div>
+
+			<div class="item">
+				<div class="ui icon input">
+					<input type="text" placeholder="Traženje...">
+					<i class="search link icon"></i>
+				</div>
+			</div>
+
+				  <div class="ui dropdown item main">
+					  	Matični podaci
+						<div class="menu">
+								<a class="item"><i class="edit icon"></i>Poduzeća</a>
+								<a class="item"><i class="globe icon"></i>Zaposlenici</a>
+								<a class="item" onClick="dologout();"><i class="settings icon"></i>Razdoblja</a>
+								<a class="item" onClick="dologout();"><i class="settings icon"></i>Robe i usluge</a>
+								<a class="item" onClick="dologout();"><i class="settings icon"></i>Mjesta</a>
+								<a class="item" onClick="dologout();"><i class="settings icon"></i>Države</a>
+								<a class="item" onClick="dologout();"><i class="settings icon"></i>Valute</a>
+						</div>
+					</div>
+										
+					<div  class="ui dropdown item main">
+							Modul
+						  <div class="menu vertical">
+								  <a class="item"><i class="edit icon"></i>Fakturiranje</a>
+								  <div class="ui dropdown item"><i class="edit icon"></i>
+										<i class="dropdown icon"></i>
+											Obrt
+										  <div class="menu">
+												<a class="item"><i class="globe icon"></i>Knjiga primitaka i izdataka</a>			  
+												<a class="item"><i class="globe icon"></i>Knjiga ulaznih računa</a>			  
+												<a class="item"><i class="globe icon"></i>Knjiga izlaznih računa</a>			  
+												<a class="item"><i class="globe icon"></i>Knjiga prometa</a>			  
+										  </div>
+										  </div>										  
+								  <a class="item"><i class="globe icon"></i>Glavna knjiga</a>
+								  <a class="item"><i class="globe icon"></i>Salda konti</a>
+								  <a class="item"><i class="globe icon"></i>Putni nalozi</a>
+								  <a class="item" onClick="dologout();"><i class="settings icon"></i>Robno/materijalno</a>
+								  <a class="item" onClick="dologout();"><i class="settings icon"></i>Osnovna sredstva</a>
+						  </div>
+					  </div>
+
+					  <div class="right menu">					
+							<div class="ui dropdown main item right" onclick="openLogin();">
+									<i class="user icon"></i>
+									{{ login ? user.userDetails.firstName+" "+user.userDetails.lastName : "Prijava"}} 
+									<i class="dropdown icon"></i>
+									<div class="menu">
+											<a class="item"><i class="edit icon"></i>Profil</a>
+											<a class="item"><i class="globe icon"></i>Konfiguracija</a>
+											<a class="item" onClick="dologout();"><i class="settings icon"></i>Odjava</a>
+									</div>
+							</div>
+					</div>				
+
+				</div>
+
+<!-- Login -->
+		<div class="ui modal middle aligned center aligned grid orbisCenterDialog"  id="loginDialog">
+				<div class="column">
+				  <h2 class="ui teal image header">
+					<div class="content">
+					  ORBIS Prijava korisnika 
+					</div>
+				  </h2>
+				  <form class="ui large form">
+					<div class="ui stacked segment">
+					  <div class="field">
+						<div class="ui left icon input">
+						  <i class="user icon"></i>
+						  <input type="text" name="email" v-model="email" placeholder="E-mail adresa">
+						</div>
+					  </div>
+					  <div class="field">
+						<div class="ui left icon input">
+						  <i class="lock icon"></i>
+						  <input type="password" name="password" v-model="password" placeholder="Lozinka">
+						</div>
+					  </div>
+					  <div class="actions">
+						<div class="ui approve button fluid large teal " onclick="dologin()">Prijava</div>					 
+					</div>
+					</div>
+			  
+					<div class="ui error message"></div>
+			  
+				  </form>
+			  
+				  <div class="ui message">
+					Niste registrirani? <a onclick="openRegistration()" href="#">&nbspRegistracija</a>
+				  </div>
+				</div>
+			  </div>
+<!-- Login -->
+
+<!-- Register -->
+<div class="ui modal middle aligned center aligned grid orbisCenterDialog" id="registerDialog">
+		<div class="column">
+		  <h2 class="ui teal image header">
+			<div class="content">
+			  ORBIS Registracija
+			</div>
+		  </h2>
+		  <form class="ui large form">
+			<div class="ui stacked segment">
+			  <div class="field">
+				<div class="ui left icon input">
+				  <i class="user icon"></i>
+				  <input type="text" name="email" v-model="email" placeholder="E-mail adresa">
+				</div>	
+			  </div>
+
+			  <div class="field">
+			  <div class="ui left icon input">
+					<i class="user icon"></i>
+					<input type="text" name="name" v-model="name" placeholder="Ime i prezime">
+				  </div>
+			  </div>
+
+			  <div class="field">
+				<div class="ui left icon input">
+				  <i class="lock icon"></i>
+				  <input type="password" name="password" v-model="password" placeholder="Lozinka">
+				</div>
+			  </div>
+			  <div class="field">
+					<div class="ui left icon input">
+					  <i class="lock icon"></i>
+					  <input type="password" name="password_check" v-model="password_check" placeholder="Provjera lozinke">
+					</div>
+				  </div>
+			  <div class="actions">
+				 	<col><div class="ui approve button fluid large teal " onclick="doregister()">Registracija</div>				
+			</table>
+			</div>
+			</div>
+	  
+			<div class="ui error message"></div>
+	  
+		  </form>
+	  	
+		</div>
+	  </div>
+<!-- Register -->
+
+
+
+<div id="central_panel">
+
+</div>
+		<div class="ui menu" id="desktopFooter" style="background-color:teal;">
+			<a class="item" style="color:white;">Test</a>
+</div>
+
+</body>
+
+
+
+<script type="text/javascript">
+
+
+import AskQuestions from "askQuestions.vue";
+
+
+var appControl = new Vue({
+				el:"#appControl",
+				components:{ AskQuestions },
+				data: { 
+					login:false,
+					user: null,					
+				},
+				methods: {	
+					setUser: function(user) {
+						this.login = true;
+						this.user = user;
+					},
+					getUser: function(user) {
+						return this.user;
+					},
+					logOut: function(){
+						this.login = false;
+						this.user = null;
+					}
+				}
+			});	
+
+var loginDialog = new Vue({
+	el:"#loginDialog",
+	data:{ email:"",
+		   password:"",		   
+		}
+});
+
+var registerDialog = new Vue({
+	el:"#registerDialog",
+	data:{ email:"",
+	       name:"",
+		   password:"",
+		   password_check:"",		   
+		}
+});
+
+var show_user = ()=>{
+			active_user.name = "Davor 22";
+    }
+
+var openLogin = () => {
+
+	if(!appControl.login) 
+		$("#loginDialog").modal("show");
+}
+
+var openRegistration = () => {
+	$("#registerDialog").modal("show");
+}
+
+    var dologin = ()=>{
+
+	console.log(loginDialog.email);		
+
+	if(!appControl.login) {
+			login(loginDialog.email, loginDialog.password, (user)=>{ appControl.setUser(user); });		
+	}
+		else
+		   console.log("Ok");
+	}
+	
+	var dologout = ()=>{
+		event.stopPropagation();
+		logout();
+		appControl.logOut();			
+    }
+
+    $(document).ready(function() {
+
+		
+
+		$("#desktopFooter").css("margin-top", window.innerHeight-120);
+
+		$('.ui.dropdown.main').dropdown({on: 'hover'});
+
+
+
+		$('.ui.form')
+        .form({
+          fields: {
+            email: {
+              identifier  : 'email',
+              rules: [
+                {
+                  type   : 'empty',
+                  prompt : 'Please enter your e-mail'
+                },
+                {
+                  type   : 'email',
+                  prompt : 'Please enter a valid e-mail'
+                }
+              ]
+            },
+            password: {
+              identifier  : 'password',
+              rules: [
+                {
+                  type   : 'empty',
+                  prompt : 'Please enter your password'
+                },
+                {
+                  type   : 'length[5]',
+                  prompt : 'Your password must be at least 5 characters'
+                }
+              ]
+            }
+          }
+        });
+	});
+
+var askQuestions = ()=>{
+		$("#askQuestionModal").modal("show");
+}
+
+
+</script>
+
+</html>
